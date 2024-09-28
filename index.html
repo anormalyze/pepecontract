@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PepeToken Holographic Vortex</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+        }
+        #container {
+            width: 100vw;
+            height: 100vh;
+        }
+        .contract-element {
+            fill: none;
+            stroke: #00ff00;
+            stroke-width: 2;
+            opacity: 0.7;
+            filter: url(#glow);
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <svg width="100%" height="100%" viewBox="0 0 1000 1000">
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <radialGradient id="hologramGradient">
+                    <stop offset="0%" stop-color="#00ffff" />
+                    <stop offset="100%" stop-color="#0000ff" />
+                </radialGradient>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="100%" height="100%" fill="url(#hologramGradient)" opacity="0.1" />
+            
+            <!-- Contract elements -->
+            <g id="contractElements">
+                <circle class="contract-element" cx="500" cy="500" r="200" />
+                <polygon class="contract-element" points="500,300 600,450 400,450" />
+                <rect class="contract-element" x="400" y="550" width="200" height="100" />
+            </g>
+            
+            <!-- Mathematical symbols -->
+            <text x="480" y="510" fill="#00ff00" font-size="24" font-family="Arial">Σ</text>
+            <text x="520" y="510" fill="#00ff00" font-size="24" font-family="Arial">∫</text>
+            <text x="450" y="590" fill="#00ff00" font-size="24" font-family="Arial">∞</text>
+            <text x="550" y="590" fill="#00ff00" font-size="24" font-family="Arial">π</text>
+        </svg>
+    </div>
+
+    <script>
+        const contractElements = document.getElementById('contractElements');
+        let angle = 0;
+
+        function animate() {
+            angle += 0.01;
+            const scale = Math.sin(angle) * 0.1 + 0.9;
+            contractElements.style.transform = `rotate(${angle}rad) scale(${scale})`;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Add vortex-like particles
+        const svg = document.querySelector('svg');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            particle.setAttribute("r", Math.random() * 3 + 1);
+            particle.setAttribute("cx", Math.random() * 1000);
+            particle.setAttribute("cy", Math.random() * 1000);
+            particle.setAttribute("fill", "#00ff00");
+            particle.style.opacity = Math.random() * 0.5 + 0.5;
+            
+            svg.appendChild(particle);
+
+            animateParticle(particle);
+        }
+
+        function animateParticle(particle) {
+            let x = parseFloat(particle.getAttribute("cx"));
+            let y = parseFloat(particle.getAttribute("cy"));
+            let speed = Math.random() * 2 + 1;
+
+            function updatePosition() {
+                const dx = 500 - x;
+                const dy = 500 - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 10) {
+                    x = Math.random() * 1000;
+                    y = Math.random() * 1000;
+                } else {
+                    x += (dx / distance) * speed;
+                    y += (dy / distance) * speed;
+                }
+
+                particle.setAttribute("cx", x);
+                particle.setAttribute("cy", y);
+
+                requestAnimationFrame(updatePosition);
+            }
+
+            updatePosition();
+        }
+    </script>
+</body>
+</html>
